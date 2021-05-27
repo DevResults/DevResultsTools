@@ -21,35 +21,35 @@ where {myInstanceName} is the name of your site in DevResults
 e.g.: cd C:\Users\MyUser\InstanceExport
 
 6. In the cli prompt create the following variables
-    ```
-    $manifestFilePath="{manifestPathFileName}"
-    ```
+```
+$manifestFilePath="{manifestPathFileName}"
+```
 > PS.: In this turorial example is manifest.json because it is in same folder of the PS script
 
-    ```
-    $exporttFilePath="{exportFilePath}"
-    ```
+```
+$exporttFilePath="{exportFilePath}"
+```
 > where {exportFilePath} should be replace with path where you want to save the exported files. In this example case we have used "C:/InstanceExport" but you can define any other if you wish.
 
-    ```
-    $userName="{myuser}@devresults.com"
-    ```
+```
+$userName="{myuser}@devresults.com"
+```
 > where {myUser} should be replaced by your username at your DevResults site to login
 
-    ```
-    $password="{myPassword}"
-    ```
+```
+$password="{myPassword}"
+```
 > where {myPassword} should be replaced by your password at your DevResults site to login
 
-    ```
-    $encryptedPassword = ConvertTo-SecureString $password -AsPlainText -Force
-    ```
+```
+$encryptedPassword = ConvertTo-SecureString $password -AsPlainText -Force
+```
 
 7. After creating all those variables you can begin exporting your data using the following command
    
-   ```
-   .\InstanceExport -manifestFilePath $manifestFilePath -exportFilePath $exportFilePath -userName $userName -password $encryptedPassword -override $true
-   ```
+```
+.\InstanceExport -manifestFilePath $manifestFilePath -exportFilePath $exportFilePath -userName $userName -password $encryptedPassword -override $true
+```
 
 The process will run automatically and it will propmt the progress of yourdata been exported by each available category. When all is finishedd you should see a message "Exporting Instance finished"
 
