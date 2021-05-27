@@ -35,8 +35,15 @@ Function Log {
     param(
         [Parameter(Mandatory=$true)][String]$msg
     )
-    
-    Add-Content ($currentDate +"_log.txt") $msg
+    $directoryPath = $exportFilePath
+    $directoryExists = Test-Path -Path $directoryPath
+    if (!$directoryExists)
+    {
+        New-Item -Path $directoryPath -ItemType "directory" | Out-Null
+        Write-Information ($directoryPath + " created")
+        Log ($directoryPath + " created")
+    }
+    Add-Content ($directoryPath + "/InstanceExport_" + $currentDate +"_log.txt") $msg
 }
 
 function Export
