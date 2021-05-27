@@ -1,4 +1,4 @@
-## Instance Export
+## Instance Export Power Shell
 
 At DevResults we value the concept that the data is yours and you have rights of getting snapshots of it at anytime. For that reason,
 we have created a tool to make it possible for you to export and save all data you have at DevResults on your own machines.
