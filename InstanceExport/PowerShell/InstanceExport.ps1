@@ -170,7 +170,8 @@ This function exports an given instancce and save it to your disk in the specifi
                     $displayMsg = "An error occurred when trying to create a new directory"
                     Log -msg $msg -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate
                 }
-                $filePath = "$directoryPath/$($entry.FileName)"
+                $fileName = $entry.FileName.Split([IO.Path]::GetInvalidFileNameChars()) -join ''
+                $filePath = "$directoryPath/$fileName"
                 $fileAlreadyExists = Test-Path -Path $filePath -PathType Leaf
                 if (!$fileAlreadyExists -or $overwrite)
                 {
