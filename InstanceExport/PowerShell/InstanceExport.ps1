@@ -101,6 +101,18 @@ Function Login(){
     return $accessTokenResponseModel
 }
 
+Function Logout($header){
+    $Parameters = @{
+        Method = "POST"
+        Uri = "https://$($manifestJson.SubDomain).$($manifestJson.HostName)/api/logout"
+        Headers = $header
+        ContentType = "application/json"
+    }
+
+    Invoke-RestMethod @Parameters | Out-Null
+    
+}
+
 function Export
 {
 <#
@@ -145,7 +157,7 @@ This function exports an given instancce and save it to your disk in the specifi
 
             $accessToken = $accessTokenResponseModel.access_token
 
-            $Header = @{
+            $header = @{
                 "authorization" = "Bearer $accessToken"
             }
 
@@ -159,7 +171,7 @@ This function exports an given instancce and save it to your disk in the specifi
                     Log -msg $message -displayMsg $message -logLevel "displayInfo" -currentDate $currentDate
                 }
                 $message = "Extracting data from $($entry.Url)"
-                Log -msg $message -displayMsg $message -logLevel "displayInfo" -currentDate $currentDate
+                Log -msg $message -displayMsg $message -logLevel "info" -currentDate $currentDate
                 $directoryPath = $exportFilePath + "/" + $entry.Path
             
                 try{
@@ -178,7 +190,7 @@ This function exports an given instancce and save it to your disk in the specifi
                     $entryExportParameters = @{
                         Method      = "GET"
                         Uri         = "https://$($manifestJson.SubDomain).$($manifestJson.HostName)$($entry.Url)"
-                        Headers     = $Header
+                        Headers     = $header
                         ContentType = "application/json"  
                     }
                         
@@ -207,6 +219,13 @@ This function exports an given instancce and save it to your disk in the specifi
             }
             $msg = "Exporting Instance run finished."
             Log -msg $msg -displayMsg $msg -logLevel "success" -currentDate $currentDate
+
+            try{
+                Logout($header)
+            } catch{
+                $message = "Error occurred when logging out"
+                Log -msg $message -displayMsg $message -logLevel "error" -currentDate $currentDate
+            }
         }
         else{
             $msg = "Exporting Instance run finished with errors."
