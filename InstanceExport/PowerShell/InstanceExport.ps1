@@ -133,6 +133,7 @@ This function exports an given instancce and save it to your disk in the specifi
             $msg = "Error in reading manifest file"
             $displayMsg = "An error occurred when reading manifest file"
             Log -msg $msg -displayMsg $displayMsg -logLevel "error"  -currentDate $currentDate
+            Exit 1
         }
     
         try{
@@ -142,6 +143,7 @@ This function exports an given instancce and save it to your disk in the specifi
             $msg = "Error trying to create $directoryPath directory"
             $displayMsg = "An error occurred when trying to create a new directory"
             Log -msg $msg -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate
+            Exit 1
         }
 
         try{
