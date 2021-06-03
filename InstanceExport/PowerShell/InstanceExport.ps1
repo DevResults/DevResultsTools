@@ -231,7 +231,7 @@ This function exports an given instancce and save it to your disk in the specifi
         }
         else{
             $msg = "Exporting Instance run finished with errors."
-            $displayMsg = "Exporting Instance run was not succesfull. Check the log file for more details."
+            $displayMsg = "Exporting Instance run was not succesful. Check the log file for more details."
             Log -msg $msg -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate
         }
         
