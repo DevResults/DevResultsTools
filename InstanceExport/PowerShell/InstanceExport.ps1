@@ -119,6 +119,8 @@ function Export
 .Description
 This function exports an given instancce and save it to your disk in the specified exportFilePath from a JSON manifest file
 #>    
+    $currentDate = Get-Date -Format "MM_dd_yyyy_HH_mm_ss"
+
     $manifestFileExists = Test-Path -Path $manifestFilePath
 
     if ($manifestFileExists)
@@ -235,8 +237,6 @@ This function exports an given instancce and save it to your disk in the specifi
         
     }
     else{
-        $currentDate = Get-Date -Format "MM_dd_yyyy_HH_mm_ss"
-    
         try{
             CreateDirectoryIfDoesNotExist -directoryPath $exportFilePath -currentDate $currentDate
         }
