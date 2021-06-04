@@ -209,7 +209,7 @@ This function exports an given instancce and save it to your disk in the specifi
                     }
                     catch{
                         $message = "Error occurred when extracting data from $($entry.Url)"
-                        Log -msg "An error occured" -displayMsg $message -logLevel "error" -currentDate $currentDate
+                        Log -msg "An error occurred" -displayMsg $message -logLevel "error" -currentDate $currentDate
                         Log -msg $message -logLevel "error" -currentDate $currentDate
                         Log -msg "StatusCode: $($_.Exception.Response.StatusCode.value__)" -logLevel "error" -currentDate $currentDate
                         Log -msg "Url: $($entry.Url)" -logLevel "error" -currentDate $currentDate
@@ -233,7 +233,7 @@ This function exports an given instancce and save it to your disk in the specifi
         }
         else{
             $msg = "Exporting Instance run finished with errors."
-            $displayMsg = "Exporting Instance run was not succesful. Check the log file for more details."
+            $displayMsg = "Exporting Instance run was not successful. Check the log file for more details."
             Log -msg $msg -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate
         }
         
