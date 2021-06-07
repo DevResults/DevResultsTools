@@ -1,0 +1,38 @@
+## Instance Export Power Shell
+
+At DevResults we value the concept that the data is yours and you have rights of getting snapshots of it at anytime. For that reason, we have created a tool to make it possible for you to export and save all data you have at DevResults on your own machines.
+
+In order to use it, you should:
+
+1. Download the InstanceExport power shell script available in this repo to your machine.
+
+2. Use DevResults API to make a POST request an updated Instance Export Manifest:
+ ```POST https://{myInstanceName}.devresults.com/api/currentinstance/export```
+
+where {myInstanceName} is the name of your site in DevResults
+
+3. Save the file in the same directory you have saved the powershell script. It's important to save the file in the JSON format and that you keep in mind the name you saved the file. In this tutorial the name we used is *manifest.json*
+
+4. Open a new command line interface (CLI) prompt that supports using of PowerShell commands. If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.1)
+
+5. Navigate to the directory you have saved the InstanceExport.ps1 and the JSON manifest file.
+
+e.g.: cd C:\Users\MyUser\InstanceExport
+
+6. In the cli prompt type the following command
+   
+   ```
+   .\InstanceExport
+   ```
+
+The process will prompt to you the mandatory fields to be typed in your screen $manifestFilePath, $exportFilePath, $userName and $password. 
+It will run automatically after you enter the fields and it will propmt the progress of your data been exported by each available category. When all is finishedd you should see a message "Exporting Instance finished"
+
+The created power shell script has five parameters that are explained below:
+- manifestFilePath : Path of the manifest file you have downloaded using step 2
+- exportFilePath: Path to create the folder for the exported files
+- userName: Your username for login at DevResults
+- password: Your password for login at DevResults or API Key's Secret
+- overwrite: Optional parameter to inform if you want to overwrite files that already exist and replace them. If you don't use the value of it will be false, which means that if a file already exists in the exportFilePath it will be skipped.
+
+PS.: Alternatively, you can right click in the InstanceExport.ps1 file, choose "run with powershell" and follow the prompst too.
