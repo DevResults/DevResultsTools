@@ -6,13 +6,9 @@ In order to use it, you should:
 
 1. Download the InstanceExport power shell script available in this repo to your machine.
 
-2. Use DevResults API to make a POST request an updated Instance Export Manifest:
+2. Reach out to us at help@devresults.com to request an Instance Export Manifest.
 
-    `POST https://{myInstanceName}.devresults.com/api/currentinstance/export`
-
-    where {myInstanceName} is the name of your site in DevResults. For detailed instructions on making a POST request to the DevResults API, please see our [knowledge base article for help with using Postman](https://help.devresults.com/help/devresults-api). 
-
-3. Save the file in the same directory you have saved the powershell script. It's important to save the file in the JSON format and that you remember what you named the file. In this tutorial the name we used is *manifest.json*.
+3. Save the manifest file in the same directory you have saved the powershell script. It's important to save the file in the JSON format and that you remember what you named the file. In this tutorial the name we used is *manifest.json*.
 
 4. Open a new command line interface (CLI) prompt that supports using of PowerShell commands. If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.1).
 
