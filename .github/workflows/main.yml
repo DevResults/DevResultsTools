@@ -2,7 +2,8 @@ name: CI
 run-name: ${{ github.actor }} is deploying DevResultsTools
 env:
   ARTIFACT_NAME: PowerShell.DevResultTools.InstanceExport
-on: [push]
+on:
+  - push
 jobs:
   build:
     runs-on: windows-latest
@@ -10,23 +11,22 @@ jobs:
       - name: Checkout Source
         uses: actions/checkout@v3
       - name: Generating self signing certificate
-          run: 
-            cd ./InstanceExport/PowerShell
-            $params = @{
-                Subject = 'CN=PowerShell Code Signing Cert'
-                Type = 'CodeSigning'
-                CertStoreLocation = 'Cert:\CurrentUser\My'
-                HashAlgorithm = 'sha256'
-            }
-            $cert = New-SelfSignedCertificate @params
-            Get-ChildItem cert:\CurrentUser\my -codesigning
-            $cert = @(Get-ChildItem cert:\CurrentUser\My -codesigning)[0]
-            Set-AuthenticodeSignature Add-Signature.ps1 $cert
-          shell: pwsh
+        run: |
+          cd ./InstanceExport/PowerShell
+          $params = @{
+            Subject = 'CN=PowerShell Code Signing Cert'
+            Type = 'CodeSigning'
+            CertStoreLocation = 'Cert:\CurrentUser\My'
+            HashAlgorithm = 'sha256'
+          }
+          $cert = New-SelfSignedCertificate @params
+          Get-ChildItem cert:\CurrentUser\my -codesigning
+          $cert = @(Get-ChildItem cert:\CurrentUser\My -codesigning)[0]
+          Set-AuthenticodeSignature Add-Signature.ps1 $cert
+        shell: pwsh
       - name: Adding self signature to InstanceExport script
-          run: ./Add-Signature.ps1 -file InstanceExport.ps1
+        run: ./Add-Signature.ps1 -file InstanceExport.ps1
       - name: Publish artifacts
-        #if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.ARTIFACT_NAME }}
