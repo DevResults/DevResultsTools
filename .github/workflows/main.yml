@@ -10,20 +10,15 @@ jobs:
     steps:
       - name: Checkout Source
         uses: actions/checkout@v3
-      - name: Generating self signing certificate
+      - name: Generating code signing cert and signing Add-Signature ps script
+        env:
+          PFX_CONTENT: ${{ secrets.BASE64_PFX_CONTENT }}
         run: |
           cd ./InstanceExport/PowerShell;
-          $params = @{
-            Subject = 'CN=PowerShell Code Signing Cert'
-            Type = 'CodeSigning'
-            CertStoreLocation = 'Cert:\CurrentUser\My'
-            HashAlgorithm = 'sha256'
-          };
-          $cert = New-SelfSignedCertificate @params;
-          Get-ChildItem cert:\CurrentUser\my -codesigning;
-          $cert = @(Get-ChildItem cert:\CurrentUser\My -codesigning)[0];
-          Export-Certificate -FilePath exported_cert.cer -Cert $cert
-          Import-Certificate -FilePath exported_cert.cer -CertStoreLocation Cert:\CurrentUser\Root
+          $pfxPath = Join-Path -Path $env:RUNNER_TEMP -ChildPath "cert.pfx";
+          $encodedBytes = [System.Convert]::FromBase64String($env:PFX_CONTENT);
+          Set-Content $pfxPath -Value $encodedBytes -AsByteStream;
+          $cert = Import-PfxCertificate -FilePath ./cert.pfx -CertStoreLocation Cert:\LocalMachine\My
           Set-AuthenticodeSignature Add-Signature.ps1 $cert
         shell: pwsh
       - name: Adding self signature to InstanceExport script
