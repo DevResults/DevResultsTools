@@ -14,6 +14,7 @@ jobs:
         env:
           PFX_CONTENT: ${{ secrets.BASE64_PFX_CONTENT }}
         run: |
+          $PSVersionTable
           cd ./InstanceExport/PowerShell;
           $pfxPath = Join-Path -Path ./InstanceExport/PowerShell -ChildPath "cert.pfx";
           $pfxPath
