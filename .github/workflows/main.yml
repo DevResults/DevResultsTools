@@ -15,7 +15,7 @@ jobs:
           PFX_CONTENT: ${{ secrets.BASE64_PFX_CONTENT }}
         run: |
           cd ./InstanceExport/PowerShell;
-          $pfxPath = Join-Path -Path $env:RUNNER_TEMP -ChildPath "cert.pfx";
+          $pfxPath = Join-Path -Path ./InstanceExport/PowerShell -ChildPath "cert.pfx";
           $encodedBytes = [System.Convert]::FromBase64String($env:PFX_CONTENT);
           Set-Content $pfxPath -Value $encodedBytes -AsByteStream;
           $cert = Import-PfxCertificate -FilePath ./cert.pfx -CertStoreLocation Cert:\LocalMachine\My
