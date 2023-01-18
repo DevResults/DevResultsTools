@@ -10,7 +10,7 @@ jobs:
       - name: Checkout Source
         uses: actions/checkout@v3
       - name: Generating self signing certificate
-          run: |
+          run: 
             cd ./InstanceExport/PowerShell
             $params = @{
                 Subject = 'CN=PowerShell Code Signing Cert'
