@@ -16,8 +16,9 @@ jobs:
         run: |
           cd ./InstanceExport/PowerShell;
           $pfxPath = Join-Path -Path ./InstanceExport/PowerShell -ChildPath "cert.pfx";
+          $pfxPath
           $encodedBytes = [System.Convert]::FromBase64String($env:PFX_CONTENT);
-          Set-Content $pfxPath -Value $encodedBytes -AsByteStream;
+          Set-Content $pfxPath -Value $encodedBytes -Encoding Byte;
           $cert = Import-PfxCertificate -FilePath ./cert.pfx -CertStoreLocation Cert:\LocalMachine\My
           Set-AuthenticodeSignature Add-Signature.ps1 $cert
         shell: pwsh
