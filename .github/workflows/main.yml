@@ -18,12 +18,12 @@ jobs:
         run: |
           cd ./InstanceExport/PowerShell;
           $PWord = $env:PFX_PWORD;
-          $PWord
           $Password = ConvertTo-SecureString -String $PWord -AsPlainText -Force
           $pfxPath = Join-Path -Path ./ -ChildPath "cert.pfx";
           $encodedBytes = [System.Convert]::FromBase64String($env:PFX_CONTENT);
           Set-Content $pfxPath -Value $encodedBytes -AsByteStream;
           $cert = Import-PfxCertificate -FilePath ./cert.pfx -CertStoreLocation Cert:\LocalMachine\My -Password $Password
+          $cert
           Set-AuthenticodeSignature Add-Signature.ps1 $cert
         shell: pwsh
       - name: Adding self signature to InstanceExport script
