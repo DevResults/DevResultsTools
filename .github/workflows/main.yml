@@ -18,6 +18,7 @@ jobs:
         run: |
           cd ./InstanceExport/PowerShell;
           $PWord = $env:PFX_PWORD;
+          Get-ChildItem cert:\LocalMachine\My
           $Password = ConvertTo-SecureString -String $PWord -AsPlainText -Force
           $pfxPath = Join-Path -Path ./ -ChildPath "cert.pfx";
           $encodedBytes = [System.Convert]::FromBase64String($env:PFX_CONTENT);
