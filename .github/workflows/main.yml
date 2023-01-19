@@ -17,7 +17,7 @@ jobs:
           PFX_CONTENT: ${{ secrets.BASE64_PFX_CONTENT }}
         run: |
           cd ./InstanceExport/PowerShell;
-          $User = $env:PFX_USER;
+          $User = "DevResults";
           $PWord = $env:PFX_PWORD;
           $Credential = New-Object System.Management.Automation.PSCredential ($User, $PWord);
           $pfxPath = Join-Path -Path ./ -ChildPath "cert.pfx";
