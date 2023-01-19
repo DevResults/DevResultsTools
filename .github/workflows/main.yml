@@ -19,7 +19,7 @@ jobs:
           cd ./InstanceExport/PowerShell;
           $User = $env:PFX_USER;
           $PWord = $env:PFX_PWORD;
-          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $User, $PWord;
+          $Credential = New-Object System.Management.Automation.PSCredential ($User, $PWord);
           $pfxPath = Join-Path -Path ./ -ChildPath "cert.pfx";
           $encodedBytes = [System.Convert]::FromBase64String($env:PFX_CONTENT);
           Set-Content $pfxPath -Value $encodedBytes -AsByteStream;
