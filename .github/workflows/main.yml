@@ -12,15 +12,18 @@ jobs:
         uses: actions/checkout@v3
       - name: Generating code signing cert and signing Add-Signature ps script
         env:
+          PFX_USER: ${{ secrets.PFX_USER }}
+          PFX_PWORD: ${{ secrets.PFX_PWORD }}
           PFX_CONTENT: ${{ secrets.BASE64_PFX_CONTENT }}
         run: |
-          $PSVersionTable
           cd ./InstanceExport/PowerShell;
+          $User = {$env:PFX_USER}
+          $PWord = {$env:PFX_PWORD}
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $User, $PWord;
           $pfxPath = Join-Path -Path ./ -ChildPath "cert.pfx";
-          $pfxPath
           $encodedBytes = [System.Convert]::FromBase64String($env:PFX_CONTENT);
           Set-Content $pfxPath -Value $encodedBytes -AsByteStream;
-          $cert = Import-PfxCertificate -FilePath ./cert.pfx -CertStoreLocation Cert:\LocalMachine\My
+          $cert = Import-PfxCertificate -FilePath ./cert.pfx -CertStoreLocation Cert:\LocalMachine\My -Password $Credential.Password
           Set-AuthenticodeSignature Add-Signature.ps1 $cert
         shell: pwsh
       - name: Adding self signature to InstanceExport script
