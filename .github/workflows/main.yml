@@ -2,15 +2,27 @@ name: CI
 run-name: ${{ github.actor }} is deploying DevResultsTools
 env:
   ARTIFACT_NAME: PowerShell.DevResultTools.InstanceExport
-on: [push]
+on:
+  - push
 jobs:
   build:
     runs-on: windows-latest
     steps:
       - name: Checkout Source
         uses: actions/checkout@v3
+      - name: Generating code signing cert and signing InstanceExport ps script
+        env:
+          PFX_PWORD: ${{ secrets.PFX_PWORD }}
+          PFX_CONTENT: ${{ secrets.BASE64_PFX_CONTENT }}
+        run: |
+          cd ./InstanceExport/PowerShell;
+          $pfxPath = Join-Path -Path ./ -ChildPath "cert.pfx";
+          $encodedBytes = [System.Convert]::FromBase64String($env:PFX_CONTENT);
+          Set-Content $pfxPath -Value $encodedBytes -AsByteStream;
+          $cert = Import-PfxCertificate -FilePath ./cert.pfx -CertStoreLocation Cert:\LocalMachine\My -Password $PWord;
+          Set-AuthenticodeSignature InstanceExport.ps1 $cert
+        shell: pwsh
       - name: Publish artifacts
-        #if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.ARTIFACT_NAME }}
