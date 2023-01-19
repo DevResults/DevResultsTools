@@ -1,0 +1,17 @@
+name: CI
+run-name: ${{ github.actor }} is deploying DevResultsTools
+env:
+  ARTIFACT_NAME: PowerShell.DevResultTools.InstanceExport
+on: [push]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v3
+      - name: Publish artifacts
+        #if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: .
