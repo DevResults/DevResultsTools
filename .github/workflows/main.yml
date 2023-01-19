@@ -16,10 +16,12 @@ jobs:
           PFX_CONTENT: ${{ secrets.BASE64_PFX_CONTENT }}
         run: |
           cd ./InstanceExport/PowerShell;
+          $PWord = $env:PFX_PWORD;
+          $Password = ConvertTo-SecureString -String $PWord -AsPlainText -Force;
           $pfxPath = Join-Path -Path ./ -ChildPath "cert.pfx";
           $encodedBytes = [System.Convert]::FromBase64String($env:PFX_CONTENT);
           Set-Content $pfxPath -Value $encodedBytes -AsByteStream;
-          $cert = Import-PfxCertificate -FilePath ./cert.pfx -CertStoreLocation Cert:\LocalMachine\My -Password $PWord;
+          $cert = Import-PfxCertificate -FilePath ./cert.pfx -CertStoreLocation Cert:\LocalMachine\My -Password $Password
           Set-AuthenticodeSignature InstanceExport.ps1 $cert
         shell: pwsh
       - name: Publish artifacts
