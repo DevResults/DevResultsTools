@@ -16,6 +16,11 @@ jobs:
           (Get-Content -path InstanceExport/PowerShell/InstanceExport.ps1 -Raw) -replace '-1.0.0-dev-','1.0.0-${{ github.sha }}' | Set-Content -Path InstanceExport/PowerShell/InstanceExport.ps1
           (Get-Content -path InstanceExport/PowerShell/InstanceExport.ps1 -Raw) -replace '-githubsha-','${{ github.sha }}' | Set-Content -Path InstanceExport/PowerShell/InstanceExport.ps1
         shell: pwsh
+      - name: Insert Version Number (from tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          (Get-Content -path InstanceExport/PowerShell/InstanceExport.ps1 -Raw) -replace '-1.0.0-dev-','${{ github.ref_name }}' | Set-Content -Path InstanceExport/PowerShell/InstanceExport.ps1
+          (Get-Content -path InstanceExport/PowerShell/InstanceExport.ps1 -Raw) -replace '-githubsha-','${{ github.sha }}' | Set-Content -Path InstanceExport/PowerShell/InstanceExport.ps1
       - name: Generating code signing cert and signing InstanceExport ps script
         env:
           PFX_PWORD: ${{ secrets.PFX_PWORD }}
