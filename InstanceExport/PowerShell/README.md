@@ -16,7 +16,7 @@ In order to use it, you should:
 
     e.g.: `cd C:\Users\MyUser\InstanceExport`
 
-6. In the cli prompt type the following command.
+6. In the cli prompt type the following command. **Be very careful not to click inside the cli prompt while it's running, or it may go into "select mode" and pause.**
    
     `.\InstanceExport`
 
