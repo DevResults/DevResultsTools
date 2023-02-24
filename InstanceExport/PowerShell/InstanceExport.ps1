@@ -110,6 +110,19 @@ Function Logout($header) {
     
 }
 
+Function ServerHealtCheck($Uri) {
+    $response = $null;
+    try {
+        Write-Verbose "Calling HealthCheck $Uri"
+        $response = Invoke-RestMethod -Uri $Uri
+    }
+    catch {
+        $response = $_
+    }
+    return $response
+}
+
+
 function Export {
     <#
 .Description
@@ -161,7 +174,9 @@ This function exports an given instancce and save it to your disk in the specifi
             }
 
             $currentCategory = "";
-            foreach ($entry in $manifestJson.Entries) {
+            $i = 0;
+            for (; $i -lt $manifestJson.Entries.Length; $i = $i + 1) {
+                $entry = $manifestJson.Entries[$i]
                 if ($currentCategory -ne $entry.Category) {
                     $currentCategory = $entry.Category;
                     $message = "Starting extraction of $($entry.Category) category."
@@ -207,6 +222,21 @@ This function exports an given instancce and save it to your disk in the specifi
                         Log -msg "Url: $($entry.Url)" -logLevel "error" -currentDate $currentDate
                         Log -msg "StatusDescription: $($_.Exception.Response.StatusDescription)" -logLevel "error" -currentDate $currentDate
                         Log -msg "Exception: $($_.Exception)" -logLevel "error" -currentDate $currentDate
+                        Write-Verbose $_.Exception
+                        Write-Verbose $_.Exception.Response
+                        if ($_.Exception.Response.StatusCode -eq 503) {
+                            $message = "Server is offline. Waiting it to get back."
+                            Write-Verbose $message
+                            Log -msg $message -displayMsg $message -logLevel "info" -currentDate $currentDate
+                            do {
+                                $response = ServerHealtCheck("https://$($manifestJson.SubDomain).$($manifestJson.HostName)/en/healthcheck");
+								
+                            } while ($response.Exception)
+                            $message = "Server is back online"
+                            Write-Verbose $message
+                            Log -msg $message -displayMsg $message -logLevel "info" -currentDate $currentDate
+                            $i = $i - 1;
+                        }
                     }
                 }
                 else {
