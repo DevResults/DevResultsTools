@@ -206,6 +206,7 @@ This function exports an given instancce and save it to your disk in the specifi
                         Log -msg "StatusCode: $($_.Exception.Response.StatusCode.value__)" -logLevel "error" -currentDate $currentDate
                         Log -msg "Url: $($entry.Url)" -logLevel "error" -currentDate $currentDate
                         Log -msg "StatusDescription: $($_.Exception.Response.StatusDescription)" -logLevel "error" -currentDate $currentDate
+                        Log -msg "Exception: $($_.Exception)" -logLevel "error" -currentDate $currentDate
                     }
                 }
                 else {
