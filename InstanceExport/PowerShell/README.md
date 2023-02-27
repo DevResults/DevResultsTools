@@ -4,7 +4,7 @@ At DevResults we value the concept that the data is yours and you have rights of
 
 In order to use it, you should:
 
-1. Download the [InstanceExport.ps1](https://raw.githubusercontent.com/DevResults/DevResultsTools/main/InstanceExport/PowerShell/InstanceExport.ps1) PowerShell script available in this repo to your machine (right click the name of the file above and choose "Save link as..." to produce a save dialog box).
+1. Download the [InstanceExport.ps1](https://raw.githubusercontent.com/DevResults/DevResultsTools/main/InstanceExport/PowerShell/InstanceExport.ps1) PowerShell script available in this repo to your machine. One way to do this is to right click the link to the file name in the previous sentence and choose "Save link as..." to produce a save dialog box.
 
 2. Reach out to us at help@devresults.com to request an Instance Export Manifest.
 
