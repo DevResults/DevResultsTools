@@ -36,37 +36,46 @@ The created power shell script has five parameters that are explained below:
 
 ### Troubleshooting
 
-When running the InstanceExport script in your local machine you might see a few error messages that could indicate an issue with downloading the information from our servers and saving it to your choosen folder. The following error messages are examples of what kind of messages you can see in the Power Shell window that you've run the script and that also should be present in a log file created for each run of the export. In order to help you solve these issues we provide here a few possible solutions that can help you solve the issues and successfully extract the data you need.
+Below you will find examples of the kinds of error messages you can encounter when running the export script. While the examples focus on documents and folders, these errors can occur anywhere user-named items (data tables, photos, etc.) are found in the database. We offer potential solutions, but note that **in most cases you will need to request a new manifest file before you re-run the script.**
 
 ```
 An error occurred
-Error occurred when extracting data from /api/awards/123/documents/Project long name/Quarterly and Annual Report long name/Q04 Reporting submissions May - Jul 2019/Annual Workplan Progress Review/A_very_long_file_name_that_will_cause_exception_v1.xlsx
+Error occurred when extracting data from /api/awards/123/documents/Project name that is very long/Quarterly and Annual Report/Q04 Reporting submissions 2019/Annual Workplan Progress Review/A_very_long_file_name_that_will_cause_exception_v1.xlsx
 StatusCode:
-Url: /api/awards/123/documents/Project long name/Quarterly and Annual Report long name/Q04 Reporting submissions May - Jul 2019/Annual Workplan Progress Review/A_very_long_file_name_that_will_cause_exception_v1.xlsx
+Url: /api/awards/123/documents/Project name that is very long/Quarterly and Annual Report/Q04 Reporting submissions 2019/Annual Workplan Progress Review/A_very_long_file_name_that_will_cause_exception_v1.xlsx
 StatusDescription:
 ```
 
-- This error message means that the Instance Export script was able to find the data on our servers but most probably something is wrong with the file path. For example, the path can be too long so PowerShell did not succeed on saving the file to your export folder. Our recommendation to solve the problem is : please try again to run PowerShell 7 (64 bit version) in your local machine so the path too long would not be a problem to download and be saved to local folder. You probably will need to rename the file after the export run if your are using Windows OS.
+This error message means the Instance Export script found the data on our servers but something is wrong with the file path. For example, some versions of PowerShell cannot handle long file names or long path names. 
+
+**Recommendation**: install PowerShell 7 (64 bit version) the accomodate longer file/path names. You may need to rename the file after the export run if your are using Windows OS.
 
 ```
 An error occurred
-Error occurred when extracting data from /api/awards/123/documents/Evaluation/NewProject/Baseline/Folder Name with ’ invalid character/My file for reports on May 2018.docx
+Error occurred when extracting data from /api/awards/123/documents/Evaluation/Folder Name with ’ invalid character/My file for reports on May 2018.docx
 StatusCode: 500
-Url: /api/awards/123/documents/Evaluation/NewProject/Baseline/Folder Name with ’ invalid character/My file for reports on May 2018.docx
+Url: /api/awards/123/documents/Evaluation/Folder Name with ’ invalid character/My file for reports on May 2018.docx
 StatusDescription: Internal Server Error
 ```
 
-- This error message means that the Instance Export script was not able to download the file. It is most probably due to the ’ character or any other invalid character that exist currently in the folder name or else in the file name. Our recommendation to solve the problem is: please try to change the name of the file and remove any special characters like for example ’, ¿, ™ and try to run the script again and see if the error goes away
+This error message means that the Instance Export script found but was not able to download the file due an invalid or reserved character present in the folder path or file name. 
+
+**Recommendation**: change the name of the file or folder and remove any special characters. Known problematic characters include but are not limited to: `<>:"/\|?*’¿™[]`. Other characters from non-Latin scripts or currency symbols can also cause issues.
 
 ```
 An error occurred
-Error occurred when extracting data from /api/awards/123/documents/Annual Reviews 2020/FileName with a ’ character that may be ´ invalidçã£.pptx
+Error occurred when extracting data from /api/awards/123/documents/Evaluation/FileName with a ’ character that may be ´ invalidçã£.pptx
 StatusCode: 404
-Url: /api/awards/123/documents/Annual Reviews 2020/FileName with a ’ character that may be ´ invalidçã£.pptx
+Url: /api/awards/123/documents/Evaluation/FileName with a ’ character that may be ´ invalidçã£.pptx
 StatusDescription: Not Found
 ```
 
-- This error message means that the Instance Export script was not able to find the data/file to be exported. It can indicate two things: 1. The award probably could have been deleted 2. We couldn't find the document because it can contain a invalid character in the filename. Our recommendation to solve the problem is: please try to check if the name of the file has any special characters like for example ’, ´ , £ and remove it from the name. Then try to run the script again and see if the error goes away. If the error persists, please contact us through help desk and we can investigate it further and help you with it
+This error message means that the Instance Export script was not able to find the data/file to be exported. This can occur in two situations: 
+
+1. The item may have been deleted
+2. The item may have been deleted because it can contain a invalid character in the filename. 
+
+**Recommendation**: check if the name of the item has any special characters like the ones mentioned above and remove it from the name.
 
 ```
 An error occurred
@@ -76,7 +85,9 @@ Url: /api/awards/123/documents/O1. Project Development/O8.1 Evidence/Extra CP Me
 StatusDescription: Bad Request
 ```
 
-- This error message means that the Instance Export script sent a request to our API and it was not processed because we couldn't find the document because it contains a invalid character like a ¿ or something else in the filename that was not accept as a valid request in our API server. Our recommendation to solve the problem is: pleas contact us through help desk and we can investigate it furter and help you to solve the problem but it might be related to renaming the file and removing the invalid characters in the file name.
+This error message means that the Instance Export script sent a request to our API and that was not accepted as a valid request in our API server, possibly due to invalid characters. 
+
+**Recommendation**: check if the name of the item has any special characters like the ones mentioned above and remove it from the name.
 
 ```
 An error occurred
@@ -86,4 +97,6 @@ Url: /api/awards/123/documents/ProjecT/ProjectT Q08 Approval Docs/A Cluster/#Exa
 StatusDescription: Service Unavailable
 ```
 
-- This error message means that our servers might have been temporarily unavailable and the Instance Export script was not able to download the file in the first time. Our Instance Export has a retry mechanism that should retry to download the file as soon as the server is available again. Our recommendation to solve the issue is: Check the log file after the export run finishes and see if the data/file was succesfully extracted/downloaded. If not, try to run the Instance Export again and if the issue persists please contact us through help desk and we will help you with it
+This error message means that the connection to our server was lost temporarily and the Instance Export script was not able to download the file on the first try. The script does have a retry mechanism that should download the file as soon as the server connection is reestablished. 
+
+**Recommendation**: Check the log file after the export run finishes and see if the data/file was succesfully extracted/downloaded. If not, try to run the Instance Export again and if the issue persists.
