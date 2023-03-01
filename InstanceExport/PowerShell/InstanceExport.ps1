@@ -118,6 +118,7 @@ Function ServerHealtCheck($Uri) {
     }
     catch {
         $response = $_
+        Start-Sleep -Seconds 5
     }
     return $response
 }
@@ -225,15 +226,15 @@ This function exports an given instancce and save it to your disk in the specifi
                         Write-Verbose $_.Exception
                         Write-Verbose $_.Exception.Response
                         if ($_.Exception.Response.StatusCode -eq 503) {
-                            $message = "Server is offline. Waiting it to get back."
-                            Write-Verbose $message
+                            $message = "Lost connection to server. Waiting to restablish connection."
+                            Write-ColorOutput red $message
                             Log -msg $message -displayMsg $message -logLevel "info" -currentDate $currentDate
                             do {
                                 $response = ServerHealtCheck("https://$($manifestJson.SubDomain).$($manifestJson.HostName)/en/healthcheck");
 								
                             } while ($response.Exception)
-                            $message = "Server is back online"
-                            Write-Verbose $message
+                            $message = "Server connection reestablished. Resuming export"
+                            Write-ColorOutput green $message
                             Log -msg $message -displayMsg $message -logLevel "info" -currentDate $currentDate
                             $i = $i - 1;
                         }
