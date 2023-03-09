@@ -1,3 +1,41 @@
+<#PSScriptInfo
+
+.VERSION -1.0.0-dev-
+
+.GUID -githubsha-
+
+.AUTHOR fred@devresults.com
+
+.COMPANYNAME DevResults
+
+.COPYRIGHT
+
+.TAGS 
+
+.LICENSEURI
+
+.PROJECTURI
+
+.ICONURI
+
+.EXTERNALMODULEDEPENDENCIES 
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+.RELEASENOTES
+
+.PRIVATEDATA
+
+#>
+
+<# 
+
+.DESCRIPTION 
+ DevResults Instance Export script 
+
+#> 
 [CmdletBinding()]
 param(    
     [Parameter(Mandatory = $True, HelpMessage = 'Path of manifest file')][String] $manifestFilePath,
