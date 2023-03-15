@@ -12,6 +12,14 @@ In order to use it, you should:
 
 4. Open a new command line interface (CLI) prompt that supports using of PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator"). If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.1).
 
+> Please note that for Windows OS users you have a subtle difference if you try to use `Windows PowerShell` and `PowerShell 7` command prompts
+
+> `Windows PowerShell` usually comes installed in recent versions of Windows. It uses `PowerShell 5` version as you can see from the below image or using the `$PSVersionTable.PSVersion` in a power shell command prompt yourself
+![image](https://user-images.githubusercontent.com/67288628/225462134-9a8e0224-3638-46be-9758-5adaf401d655.png)
+
+> `PowerShell 7` is the most recent version of PowerShell released by Microsoft and we recommend using it because it can save you from getting into trouble with file paths being too long and our `InstanceExport` script not being able to export the file properly. After you install the `PowerShell 7` and openning its command line prompt you should be able to see the version of PowerShell using the `$PSVersionTable.PSVersion` command like shown in the image below
+![image](https://user-images.githubusercontent.com/67288628/225463265-13a63f36-ef92-4813-9108-e4e949dc8e3f.png)
+
 5. Navigate to the directory you have saved the InstanceExport.ps1 and the JSON manifest file.
 
    e.g.: `cd C:\Users\MyUser\InstanceExport`
@@ -22,7 +30,7 @@ In order to use it, you should:
 
 The process will prompt to you the mandatory fields to be typed in your screen `$manifestFilePath`, `$exportFilePath`, `$userName` and `$password`. Because you navigated to the directory/folder in step 5, you do not need to enter the full path, just the file names (see example below).
 
-<img width="668" alt="image" src="https://user-images.githubusercontent.com/4453639/189958873-5a325524-3ec9-42da-932a-a090e99f37b0.png">
+![image](https://user-images.githubusercontent.com/67288628/225464180-819117b1-0f24-4ecb-a6c7-ae2d45db34d6.png)
 
 It will run automatically after you enter the fields and it will prompt the progress of your data been exported by each available category. When all is finished you should see the message "Exporting Instance finished".
 
@@ -33,6 +41,10 @@ The created power shell script has five parameters that are explained below:
 - userName: Your username (work email) for login at DevResults, e.g. `first.last@org.org`.
 - password: Your password for login at DevResults or API Key's Secret. (If you're using a password manager and copy/pasting your password, be aware that CTRL-V does not work in Powershell; try right clicking in the window instead.)
 - overwrite: Optional parameter to inform if you want to overwrite files that already exist and replace them. If you don't use the value of it will be false, which means that if a file already exists in the exportFilePath it will be skipped.
+
+### Output
+We expect that things goes smoothly while you are using the DevResults InstanceExport script and that you get a result close to the following image
+![image](https://user-images.githubusercontent.com/67288628/225465649-ac48360f-af6c-458b-a294-c0e0409d33e3.png)
 
 ### Troubleshooting
 
