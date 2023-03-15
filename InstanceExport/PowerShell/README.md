@@ -42,6 +42,9 @@ The created power shell script has five parameters that are explained below:
 - password: Your password for login at DevResults or API Key's Secret. (If you're using a password manager and copy/pasting your password, be aware that CTRL-V does not work in Powershell; try right clicking in the window instead.)
 - overwrite: Optional parameter to inform if you want to overwrite files that already exist and replace them. If you don't use the value of it will be false, which means that if a file already exists in the exportFilePath it will be skipped.
 
+> Please note that if you use `.\InstanceExport.ps1` without passing any parameters you will be asked to provide the information and you will not be able to use the overwrite parameter. If you are more experienced with PS you can also use the command passing the parameter like shown in the image below
+![image](https://user-images.githubusercontent.com/67288628/225468832-d4fc83d7-4980-45b4-8a69-094f17e67b0d.png)
+
 ### Output
 We expect that things goes smoothly while you are using the DevResults InstanceExport script and that you get a result close to the following image
 ![image](https://user-images.githubusercontent.com/67288628/225465649-ac48360f-af6c-458b-a294-c0e0409d33e3.png)
