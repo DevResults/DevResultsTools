@@ -1,0 +1,42 @@
+name: CI
+run-name: ${{ github.actor }} is deploying DevResultsTools
+env:
+  ARTIFACT_NAME: PowerShell.DevResultTools.InstanceExport
+on:
+  - push
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v3
+      - name: Insert Version Number (from sha)
+        if: startsWith(github.ref, 'refs/heads/')
+        run: |
+          (Get-Content -path InstanceExport/PowerShell/InstanceExport.ps1 -Raw) -replace '-1.0.0-dev-','1.0.0-${{ github.sha }}' | Set-Content -Path InstanceExport/PowerShell/InstanceExport.ps1
+          (Get-Content -path InstanceExport/PowerShell/InstanceExport.ps1 -Raw) -replace '-githubsha-','${{ github.sha }}' | Set-Content -Path InstanceExport/PowerShell/InstanceExport.ps1
+        shell: pwsh
+      - name: Insert Version Number (from tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          (Get-Content -path InstanceExport/PowerShell/InstanceExport.ps1 -Raw) -replace '-1.0.0-dev-','${{ github.ref_name }}' | Set-Content -Path InstanceExport/PowerShell/InstanceExport.ps1
+          (Get-Content -path InstanceExport/PowerShell/InstanceExport.ps1 -Raw) -replace '-githubsha-','${{ github.sha }}' | Set-Content -Path InstanceExport/PowerShell/InstanceExport.ps1
+      - name: Generating code signing cert and signing InstanceExport ps script
+        env:
+          PFX_PWORD: ${{ secrets.PFX_PWORD }}
+          PFX_CONTENT: ${{ secrets.BASE64_PFX_CONTENT }}
+        run: |
+          cd ./InstanceExport/PowerShell;
+          $PWord = $env:PFX_PWORD;
+          $Password = ConvertTo-SecureString -String $PWord -AsPlainText -Force;
+          $pfxPath = Join-Path -Path ./ -ChildPath "cert.pfx";
+          $encodedBytes = [System.Convert]::FromBase64String($env:PFX_CONTENT);
+          Set-Content $pfxPath -Value $encodedBytes -AsByteStream;
+          $cert = Import-PfxCertificate -FilePath ./cert.pfx -CertStoreLocation Cert:\LocalMachine\My -Password $Password
+          Set-AuthenticodeSignature InstanceExport.ps1 $cert
+        shell: pwsh
+      - name: Publish artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ./InstanceExport/PowerShell/InstanceExport.ps1
