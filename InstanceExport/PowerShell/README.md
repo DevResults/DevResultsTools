@@ -10,7 +10,7 @@ In order to use it, you should:
 
 3. Save the manifest file in the same directory/folder you have saved the powershell script. It's important to save the file in the JSON format and that you remember what you named the file. In this tutorial the name we used is _manifest.json_.
 
-4. Open a new command line interface (CLI) prompt that supports using of PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator"). If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.1).
+4. Open a new command line interface (CLI) prompt that supports using of PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator"). If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.3).
 
 > Please note that for Windows OS users you have a subtle difference if you try to use `Windows PowerShell` and `PowerShell 7` command prompts
 
