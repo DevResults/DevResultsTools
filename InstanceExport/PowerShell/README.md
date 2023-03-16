@@ -10,14 +10,14 @@ In order to use it, you should:
 
 3. Save the manifest file in the same directory/folder you have saved the powershell script. It's important to save the file in the JSON format and that you remember what you named the file. In this tutorial the name we used is _manifest.json_.
 
-4. Open a new command line interface (CLI) prompt that supports using of PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator"). If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.3).
+4. Open a new command line interface (CLI) prompt that supports using of PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administrator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator"). If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.3).
 
 > Please note that for Windows OS users you have a subtle difference if you try to use `Windows PowerShell` and `PowerShell 7` command prompts
 
 > `Windows PowerShell` usually comes installed in recent versions of Windows. It uses `PowerShell 5` version as you can see from the below image or using the `$PSVersionTable.PSVersion` in a power shell command prompt yourself
 ![image](https://user-images.githubusercontent.com/67288628/225462134-9a8e0224-3638-46be-9758-5adaf401d655.png)
 
-> `PowerShell 7` is the most recent version of PowerShell released by Microsoft and we recommend using it because it can save you from getting into trouble with file paths being too long and our `InstanceExport` script not being able to export the file properly. After you install the `PowerShell 7` and openning its command line prompt you should be able to see the version of PowerShell using the `$PSVersionTable.PSVersion` command like shown in the image below
+> `PowerShell 7` is the most recent version of PowerShell released by Microsoft and we recommend using it because it can save you from getting into trouble with file paths being too long and our `InstanceExport` script not being able to export the file properly. After you install the `PowerShell 7` and opening its command line prompt you should be able to see the version of PowerShell using the `$PSVersionTable.PSVersion` command like shown in the image below
 ![image](https://user-images.githubusercontent.com/67288628/225463265-13a63f36-ef92-4813-9108-e4e949dc8e3f.png)
 
 5. Navigate to the directory you have saved the InstanceExport.ps1 and the JSON manifest file.
@@ -63,7 +63,7 @@ StatusDescription:
 
 This error message means the Instance Export script found the data on our servers but something is wrong with the file path. For example, some versions of PowerShell cannot handle long file names or long path names. 
 
-**Recommendation**: install PowerShell 7 (64 bit version) the accomodate longer file/path names. You may need to rename the file after the export run if your are using Windows OS.
+**Recommendation**: install PowerShell 7 (64 bit version) the accommodate longer file/path names. You may need to rename the file after the export run if your are using Windows OS.
 
 ```
 An error occurred
@@ -114,4 +114,4 @@ StatusDescription: Service Unavailable
 
 This error message means that the connection to our server was lost temporarily and the Instance Export script was not able to download the file on the first try. The script does have a retry mechanism that should download the file as soon as the server connection is reestablished. 
 
-**Recommendation**: Check the log file after the export run finishes and see if the data/file was succesfully extracted/downloaded. If not, try to run the Instance Export again and if the issue persists.
+**Recommendation**: Check the log file after the export run finishes and see if the data/file was successfully extracted/downloaded. If not, try to run the Instance Export again and if the issue persists.
