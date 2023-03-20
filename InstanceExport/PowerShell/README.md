@@ -1,6 +1,6 @@
 ## Instance Export Power Shell
 
-At DevResults we value the concept that the data is yours and you have rights of getting snapshots of it at anytime. For that reason, we have created a tool to make it possible for you to export and save all data you have at DevResults on your own machines.
+At DevResults we value the concept that your data belongs to _you_, and you have rights of getting snapshots of it at anytime. For that reason, we have created a tool to make it possible for you to export and save all the data that you have in DevResults to your own machines.
 
 In order to use it, you should:
 
@@ -8,50 +8,54 @@ In order to use it, you should:
 
 2. Reach out to us at help@devresults.com to request an Instance Export Manifest.
 
-3. Save the manifest file in the same directory/folder you have saved the powershell script. It's important to save the file in the JSON format and that you remember what you named the file. In this tutorial the name we used is _manifest.json_.
+3. Save the manifest file in the same directory/folder you have saved the powershell script. It's important to save the file in JSON format and to remember the name of the file. In this tutorial the name we use is _manifest.json_.
 
-4. Open a new command line interface (CLI) prompt that supports using of PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administrator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator"). If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.3).
+4. Open a new command line interface (CLI) prompt that supports PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administrator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator"). If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.3).
 
-> Please note that for Windows OS users you have a subtle difference if you try to use `Windows PowerShell` and `PowerShell 7` command prompts
+Please note that there will be subtle differences between `Windows PowerShell` and `PowerShell 7` command prompts:
 
-> `Windows PowerShell` usually comes installed in recent versions of Windows. It uses `PowerShell 5` version as you can see from the below image or using the `$PSVersionTable.PSVersion` in a power shell command prompt yourself
+`Windows PowerShell` usually comes installed with Windows. It uses the `PowerShell 5` version as you can see from the image below:
+
 ![image](https://user-images.githubusercontent.com/67288628/225462134-9a8e0224-3638-46be-9758-5adaf401d655.png)
 
-> `PowerShell 7` is the most recent version of PowerShell released by Microsoft and we recommend using it because it can save you from getting into trouble with file paths being too long and our `InstanceExport` script not being able to export the file properly. After you install the `PowerShell 7` and opening its command line prompt you should be able to see the version of PowerShell using the `$PSVersionTable.PSVersion` command like shown in the image below
+`PowerShell 7` is the most recent version of PowerShell released by Microsoft. We recommend using it as it supports longer file paths, which allows our `InstanceExport` script to export files with long names properly. After you install `PowerShell 7` and open its command line prompt, you should be able to see the version of PowerShell using the `$PSVersionTable.PSVersion` command as shown in the image below:
+
 ![image](https://user-images.githubusercontent.com/67288628/225463265-13a63f36-ef92-4813-9108-e4e949dc8e3f.png)
 
-5. Navigate to the directory you have saved the InstanceExport.ps1 and the JSON manifest file.
+5. Navigate to the directory where you have saved the InstanceExport.ps1 and the JSON manifest file.
 
    e.g.: `cd C:\Users\MyUser\InstanceExport`
 
-6. In the cli prompt type the following command. **Be very careful not to click inside the cli prompt while it's running, or it may go into "select mode" and pause.**
+6. In the cli prompt, type the following command. **Be very careful not to click inside the cli prompt while it's running, or it may go into "select mode" and pause.**
 
    `.\InstanceExport`
 
-The process will prompt to you the mandatory fields to be typed in your screen `$manifestFilePath`, `$exportFilePath`, `$userName` and `$password`. Because you navigated to the directory/folder in step 5, you do not need to enter the full path, just the file names (see example below).
+The process will prompt you to enter the required fields: `$manifestFilePath`, `$exportFilePath`, `$userName` and `$password`. Because you navigated to the directory/folder in step 5, you do not need to enter the full path, just the file names (see example below).
 
 ![image](https://user-images.githubusercontent.com/67288628/225464180-819117b1-0f24-4ecb-a6c7-ae2d45db34d6.png)
 
-It will run automatically after you enter the fields and it will prompt the progress of your data been exported by each available category. When all is finished you should see the message "Exporting Instance finished".
+It will run automatically after you enter all required fields. The progress of your data export will be logged by each available category. When all is finished you should see the message "Exporting Instance finished".
 
-The created power shell script has five parameters that are explained below:
+The PowerShell script has five parameters that are explained below:
 
 - manifestFilePath: Path (or just file name, if same directory) of the manifest file you have downloaded using step 2, e.g. `C:\Users\MyUser\InstanceExport\manifest.json`.
 - exportFilePath: Path (or just file name, if same directory) to create a folder for the exported files, e.g. `C:\Users\MyUser\InstanceExport\2021_Export\`; you do not need to create this folder manually, the script will do so for you.
 - userName: Your username (work email) for login at DevResults, e.g. `first.last@org.org`.
-- password: Your password for login at DevResults or API Key's Secret. (If you're using a password manager and copy/pasting your password, be aware that CTRL-V does not work in Powershell; try right clicking in the window instead.)
-- overwrite: Optional parameter to inform if you want to overwrite files that already exist and replace them. If you don't use the value of it will be false, which means that if a file already exists in the exportFilePath it will be skipped.
+- password: Your password for login at DevResults or API Key's Secret. (If you're using a password manager and copy/pasting your password, be aware that CTRL-V does not work in Powershell; try right clicking in the window to paste instead.)
+- overwrite: Optional parameter to confirm whether or not you want to overwrite files that already exist and replace them. This field defaults to `false`, which means that if a file already exists in the exportFilePath, it will be skipped.
 
-> Please note that if you use `.\InstanceExport.ps1` without passing any parameters you will be asked to provide the information and you will not be able to use the overwrite parameter. If you are more experienced with PS you can also use the command passing the parameter like shown in the image below
+Please note that if you use `.\InstanceExport.ps1` without passing any parameters you will be asked to provide the information and will not be able to use the overwrite parameter. If you are more experienced with PowerShell, you can also use the command by passing parameters as shown in the image below:
+
 ![image](https://user-images.githubusercontent.com/67288628/225468832-d4fc83d7-4980-45b4-8a69-094f17e67b0d.png)
 
 ### Output
-We expect that things goes smoothly while you are using the DevResults InstanceExport script and that you get a result close to the following image
+We expect that things will go smoothly while you are using the DevResults InstanceExport script and that you get a result similar to the following image:
+
 ![image](https://user-images.githubusercontent.com/67288628/225465649-ac48360f-af6c-458b-a294-c0e0409d33e3.png)
 
 ### Troubleshooting
 
-Below you will find examples of the kinds of error messages you can encounter when running the export script. While the examples focus on documents and folders, these errors can occur anywhere user-named items (data tables, photos, etc.) are found in the database. We offer potential solutions, but note that **in most cases you will need to request a new manifest file before you re-run the script.**
+Below you will find examples of the kinds of error messages you may encounter when running the export script. While the examples focus on documents and folders, these errors can occur anywhere user-named items (data tables, photos, etc.) are found in the database. We offer potential solutions, but note that **in most cases you will need to request a new manifest file before you re-run the script.**
 
 ```
 An error occurred
@@ -61,9 +65,9 @@ Url: /api/awards/123/documents/Project name that is very long/Quarterly and Annu
 StatusDescription:
 ```
 
-This error message means the Instance Export script found the data on our servers but something is wrong with the file path. For example, some versions of PowerShell cannot handle long file names or long path names. 
+This error message means the Instance Export script found the data on our servers but something is wrong with the file path. For example, some earlier versions of PowerShell cannot handle long file names or long path names. 
 
-**Recommendation**: install PowerShell 7 (64 bit version) the accommodate longer file/path names. You may need to rename the file after the export run if your are using Windows OS.
+**Recommendation**: install PowerShell 7 (64 bit version) which can accommodate longer file/path names. You may need to rename the file after the export run if your are using Windows OS.
 
 ```
 An error occurred
@@ -88,9 +92,9 @@ StatusDescription: Not Found
 This error message means that the Instance Export script was not able to find the data/file to be exported. This can occur in two situations: 
 
 1. The item may have been deleted
-2. The item may have been deleted because it can contain a invalid character in the filename. 
+2. The item may have been deleted because it contained a invalid character in the filename. 
 
-**Recommendation**: check if the name of the item has any special characters like the ones mentioned above and remove it from the name.
+**Recommendation**: check if the name of the item has any special characters like the ones mentioned above and remove them from the name.
 
 ```
 An error occurred
@@ -102,7 +106,7 @@ StatusDescription: Bad Request
 
 This error message means that the Instance Export script sent a request to our API and that was not accepted as a valid request in our API server, possibly due to invalid characters. 
 
-**Recommendation**: check if the name of the item has any special characters like the ones mentioned above and remove it from the name.
+**Recommendation**: check if the name of the item has any special characters like the ones mentioned above and remove them from the name.
 
 ```
 An error occurred
