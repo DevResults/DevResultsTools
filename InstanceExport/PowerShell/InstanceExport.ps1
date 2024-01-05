@@ -116,8 +116,7 @@ Function CreateDirectoryIfDoesNotExist {
 }
 
 Function Login() {
-    $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($password)
-    $UnsecurePassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+    $UnsecurePassword = ConvertFrom-SecureString -SecureString $password -AsPlainText
 
     $Body = @{
         UserName = $userName
