@@ -115,8 +115,28 @@ Function CreateDirectoryIfDoesNotExist {
     }
 }
 
+Function GetPassword() {
+    # assume powershell 7 first
+    try {    
+        return ConvertFrom-SecureString -SecureString $password -AsPlainText
+    }
+    catch {
+        Log -msg $_.Exception.Message -logLevel "displayInfo" -currentDate $currentDate
+    }
+    # fallback to powershell 5
+    $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($password)
+    $UnsecurePassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+    if ($UnsecurePassword.Length -gt 1) {
+        return $UnsecurePassword
+    }
+    # we're probably on some non-windows environment... fall back to unsecured
+    $msg = "Warning: Unable to handle password securely. Falling back to plain text password"
+    Log -msg $msg -logLevel "displayInfo" -currentDate $currentDate
+    return Read-Host "$msg. To continue, please enter the password again"
+}
+
 Function Login() {
-    $UnsecurePassword = ConvertFrom-SecureString -SecureString $password -AsPlainText
+    $UnsecurePassword = GetPassword
 
     $Body = @{
         UserName = $userName
