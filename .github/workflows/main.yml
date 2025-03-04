@@ -33,7 +33,7 @@ jobs:
           $encodedBytes = [System.Convert]::FromBase64String($env:PFX_CONTENT);
           Set-Content $pfxPath -Value $encodedBytes -AsByteStream;
           $cert = Import-PfxCertificate -FilePath ./cert.pfx -CertStoreLocation Cert:\LocalMachine\My -Password $Password
-          Set-AuthenticodeSignature InstanceExport.ps1 $cert
+          Set-AuthenticodeSignature InstanceExport.ps1 $cert -ErrorAction Stop
         shell: pwsh
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
