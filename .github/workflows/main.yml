@@ -25,14 +25,22 @@ jobs:
         env:
           PFX_PWORD: ${{ secrets.PFX_PWORD }}
           PFX_CONTENT: ${{ secrets.BASE64_PFX_CONTENT }}
+          ROOT_CONTENT: ${{ secrets.BASE64_ROOT_CONTENT }}
         run: |
           cd ./InstanceExport/PowerShell;
+
+          $rootPath = Join-Path -Path ./ -ChildPath "root.cer";
+          $encodedBytes = [System.Convert]::FromBase64String($env:ROOT_CONTENT);
+          Set-Content $rootPath -Value $encodedBytes -AsByteStream;
+          Import-Certificate -FilePath ./root.cer -CertStoreLocation Cert:\LocalMachine\Root
+
           $PWord = $env:PFX_PWORD;
           $Password = ConvertTo-SecureString -String $PWord -AsPlainText -Force;
           $pfxPath = Join-Path -Path ./ -ChildPath "cert.pfx";
           $encodedBytes = [System.Convert]::FromBase64String($env:PFX_CONTENT);
           Set-Content $pfxPath -Value $encodedBytes -AsByteStream;
           $cert = Import-PfxCertificate -FilePath ./cert.pfx -CertStoreLocation Cert:\LocalMachine\My -Password $Password
+
           $sig = Set-AuthenticodeSignature InstanceExport.ps1 $cert -ErrorAction Stop
           if ($sig.Status -ne 'Valid') { throw $sig.StatusMessage }
         shell: pwsh
