@@ -4,13 +4,17 @@ At DevResults we value the concept that your data belongs to _you_, and you have
 
 In order to use it, you should:
 
-1. Download the [InstanceExport.ps1](https://github.com/DevResults/DevResultsTools/releases/download/1.0.2/InstanceExport.ps1) PowerShell script.
+1. Download the [InstanceExport.ps1](https://github.com/DevResults/DevResultsTools/releases/download/1.0.3/InstanceExport.ps1) PowerShell script.
 
-2. Reach out to us at help@devresults.com to request an Instance Export Manifest.
+2. Reach out to us at help@devresults.com to request an Instance Export Manifest. Or Manifests in case you need to export more than one instance you own.
 
-3. Save the manifest file in the same directory/folder you have saved the powershell script. It's important to save the file in JSON format and to remember the name of the file. In this tutorial the name we use is _manifest.json_.
+3. Save the `InstanceExport.ps1` file in a directory in your machine like `C:\Users\MyUser\InstanceExport`.
 
-4. Open a new command line interface (CLI) prompt that supports PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administrator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator"). If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.3).
+4. Inside the folder created on step 3. create a `manifest` folder. 
+
+5. Save your manifest file(s) inside the `manifest` folder. The manifest files come in the JSON format and they are necessary to be that way to be read by the script. In this tutorial consider that your file(s) will be named in the pattern yourInstanceName_manifest.json_.
+
+4. Open a new command line interface (CLI) prompt that supports PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administrator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator"). If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.5).
 
 Please note that there will be subtle differences between `Windows PowerShell` and `PowerShell 7` command prompts:
 
@@ -22,7 +26,7 @@ Please note that there will be subtle differences between `Windows PowerShell` a
 
 ![image](https://user-images.githubusercontent.com/67288628/225463265-13a63f36-ef92-4813-9108-e4e949dc8e3f.png)
 
-5. Navigate to the directory where you have saved the InstanceExport.ps1 and the JSON manifest file.
+6. Navigate to the directory where you have saved the `InstanceExport.ps1` and that has also the `manifest` folder.
 
    e.g.: `cd C:\Users\MyUser\InstanceExport`
 
@@ -38,8 +42,8 @@ It will run automatically after you enter all required fields. The progress of y
 
 The PowerShell script has five parameters that are explained below:
 
-- manifestFilePath: Path (or just file name, if same directory) of the manifest file you have downloaded using step 2, e.g. `C:\Users\MyUser\InstanceExport\manifest.json`.
-- exportFilePath: Path (or just file name, if same directory) to create a folder for the exported files, e.g. `C:\Users\MyUser\InstanceExport\2021_Export\`; you do not need to create this folder manually, the script will do so for you.
+- manifestFilePath: Path (or just folder name, if in the same directory) of the manifest file(s) you have added inside the `manifest` folder from step 3, e.g. `C:\Users\MyUser\InstanceExport\manifest`.
+- exportFilePath: Path (or just folder name, if in the same directory) to create a folder that will contain all instance(s) you are going to export, e.g. `C:\Users\MyUser\InstanceExport\2025_Export\`; you do not need to create this folder manually, the script will do so for you.
 - userName: Your username (work email) for login at DevResults, e.g. `first.last@org.org`.
 - password: Your password for login at DevResults or API Key's Secret. (If you're using a password manager and copy/pasting your password, be aware that CTRL-V does not work in Powershell; try right clicking in the window to paste instead.)
 - overwrite: Optional parameter to confirm whether or not you want to overwrite files that already exist and replace them. This field defaults to `false`, which means that if a file already exists in the exportFilePath, it will be skipped.
