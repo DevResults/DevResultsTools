@@ -68,7 +68,8 @@ Function Log {
         [Parameter(Mandatory = $true)][String]$msg,
         [Parameter(Mandatory = $false)][String]$displayMsg,
         [Parameter(Mandatory = $true)][String]$logLevel,
-        [Parameter(Mandatory = $true)][String]$currentDate
+        [Parameter(Mandatory = $true)][String]$currentDate,
+        [Parameter(Mandatory = $true)][String]$instance
     )
     switch ($logLevel) {
         "error" {
@@ -92,25 +93,26 @@ Function Log {
             }
         }
     }
-    Add-Content "$($exportFilePath)/InstanceExport_$($currentDate)_log.txt" $msg
+    Add-Content "$($exportFilePath)/$instance/$($instance)_InstanceExport_$($currentDate)_log.txt" $msg
 }
 
 Function CreateDirectoryIfDoesNotExist {
     param (
         [Parameter(Mandatory = $true)][String]$directoryPath,
-        [Parameter(Mandatory = $true)][String] $currentDate
+        [Parameter(Mandatory = $true)][String] $currentDate,
+        [Parameter(Mandatory = $true)][String] $instance
     )
     $directoryExists = Test-Path -Path $directoryPath
     if (!$directoryExists) {
         try {
             New-Item -Path $directoryPath -ItemType "directory" | Out-Null
             $msg = "$directoryPath created"
-            Log -msg $msg -displayMsg $msg -logLevel "info" -currentDate $currentDate
+            Log -msg $msg -displayMsg $msg -logLevel "info" -currentDate $currentDate -instance $instance
         }
         catch { 
             $msg = "Error trying to create $directoryPath directory"
             $displayMsg = "Error creating directory"
-            Log -msg $msg -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate
+            Log -msg $msg -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate -instance $instance
         }
     }
 }
@@ -121,7 +123,7 @@ Function GetPassword() {
         return ConvertFrom-SecureString -SecureString $password -AsPlainText
     }
     catch {
-        Log -msg $_.Exception.Message -logLevel "displayInfo" -currentDate $currentDate
+        Log -msg $_.Exception.Message -logLevel "displayInfo" -currentDate $currentDate -instance $instance
     }
     # fallback to powershell 5
     $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($password)
@@ -131,7 +133,7 @@ Function GetPassword() {
     }
     # we're probably on some non-windows environment... fall back to unsecured
     $msg = "Warning: Unable to handle password securely. Falling back to plain text password"
-    Log -msg $msg -logLevel "displayInfo" -currentDate $currentDate
+    Log -msg $msg -logLevel "displayInfo" -currentDate $currentDate -instance $instance
     return Read-Host "$msg. To continue, please enter the password again"
 }
 
@@ -187,150 +189,162 @@ function Export {
 This function exports an given instancce and save it to your disk in the specified exportFilePath from a JSON manifest file
 #>    
     $currentDate = Get-Date -Format "MM_dd_yyyy_HH_mm_ss"
-
-    $manifestFileExists = Test-Path -Path $manifestFilePath
-
-    if ($manifestFileExists) {
-        $manifestJson = Get-Content -Raw -Path $manifestFilePath | ConvertFrom-Json
-        if ($manifestJson.CreateDate) {
-            $currentDate = Get-Date $manifestJson.CreateDate -Format "MM_dd_yyyy_HH_mm_ss"
-        }
-        else {
-            $msg = "Error in reading manifest file"
-            $displayMsg = "An error occurred when reading manifest file"
-            Log -msg $msg -displayMsg $displayMsg -logLevel "error"  -currentDate $currentDate
-            Exit 1
-        }
-    
-        try {
-            CreateDirectoryIfDoesNotExist -directoryPath $exportFilePath -currentDate $currentDate
-        }
-        catch {
-            $msg = "Error trying to create $directoryPath directory"
-            $displayMsg = "An error occurred when trying to create a new directory"
-            Log -msg $msg -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate
-            Exit 1
-        }
-
-        try {
-            $accessTokenResponseModel = Login
-        }
-        catch {
-            Log -msg "An error occurred" -displayMsg "$($_.Exception.Response.StatusCode.value__): An error occurred when logging in" -logLevel "error" -currentDate $currentDate
-            Log -msg "Authorization error for Instance Export" -logLevel "error" -currentDate $currentDate
-            Log -msg "StatusCode: $($_.Exception.Response.StatusCode.value__)" -logLevel "error" -currentDate $currentDate
-            Log -msg "Url: api/login" -logLevel "error" -currentDate $currentDate
-            Log -msg "StatusDescription: $($_.Exception.Response.StatusDescription)" -logLevel "error" -currentDate $currentDate
-        }
-
-        if ($accessTokenResponseModel) {
-
-            $accessToken = $accessTokenResponseModel.access_token
-
-            $header = @{
-                "authorization" = "Bearer $accessToken"
-            }
-
-            $currentCategory = "";
-            $i = 0;
-            for (; $i -lt $manifestJson.Entries.Length; $i = $i + 1) {
-                $entry = $manifestJson.Entries[$i]
-                if ($currentCategory -ne $entry.Category) {
-                    $currentCategory = $entry.Category;
-                    $message = "Starting extraction of $($entry.Category) category."
-                    Log -msg $message -displayMsg $message -logLevel "displayInfo" -currentDate $currentDate
+	
+    $manifestFilePathExists = Test-Path -Path $manifestFilePath
+	
+    if ($manifestFilePathExists) {
+        $manifestFilePath = $manifestFilePath.TrimEnd('\')  # Trim any trailing backslash if it exists
+		
+        $manifesJsonFiles = Get-ChildItem -Path "$manifestFilePath\*" -Include "*.json"
+		
+        foreach ($manifestFile in $manifesJsonFiles) {
+			
+            $manifestFileExists = Test-Path -Path $manifestFile
+			
+            $instance = ($manifestFile.BaseName -split ' ')[0]
+			
+            if ($manifestFileExists) {
+                $manifestJson = Get-Content -Raw -Path $manifestFile | ConvertFrom-Json
+                if ($manifestJson.CreateDate) {
+                    $currentDate = Get-Date $manifestJson.CreateDate -Format "MM_dd_yyyy_HH_mm_ss"
                 }
-                $message = "Extracting data from $($entry.Url)"
-                Log -msg $message -displayMsg $message -logLevel "info" -currentDate $currentDate
-                $directoryPath = $exportFilePath + "/" + $entry.Path
-            
+                else {
+                    $msg = "Error in reading manifest file"
+                    $displayMsg = "An error occurred when reading manifest file"
+                    Log -msg $msg -displayMsg $displayMsg -logLevel "error"  -currentDate $currentDate -instance $instance
+                    Exit 1
+                }
+				
                 try {
-                    CreateDirectoryIfDoesNotExist -directoryPath $directoryPath -currentDate $currentDate
+                    CreateDirectoryIfDoesNotExist -directoryPath "$exportFilePath\$instance" -currentDate $currentDate -instance $instance
                 }
                 catch {
                     $msg = "Error trying to create $directoryPath directory"
                     $displayMsg = "An error occurred when trying to create a new directory"
-                    Log -msg $msg -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate
+                    Log -msg $msg -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate -instance $instance
+                    Exit 1
                 }
-                $fileName = $entry.FileName.Split([IO.Path]::GetInvalidFileNameChars()) -join ''
-                $filePath = "$directoryPath/$fileName"
-                $fileAlreadyExists = Test-Path -Path $filePath -PathType Leaf
-                if (!$fileAlreadyExists -or $overwrite) {
-                    $entryExportParameters = @{
-                        Method      = "GET"
-                        Uri         = "https://$($manifestJson.SubDomain).$($manifestJson.HostName)$($entry.Url)"
-                        Headers     = $header
-                        ContentType = "application/json"  
+				
+                $msg = "$instance"
+                $displayMsg = "Starting exporting data for instance $instance"
+                Log -msg $msg -displayMsg $displayMsg -logLevel "success" -currentDate $currentDate -instance $instance
+
+                try {
+                    $accessTokenResponseModel = Login
+                }
+                catch {
+                    Log -msg "An error occurred" -displayMsg "$($_.Exception.Response.StatusCode.value__): An error occurred when logging in" -logLevel "error" -currentDate $currentDate -instance $instance
+                    Log -msg "Authorization error for Instance Export" -logLevel "error" -currentDate $currentDate -instance $instance
+                    Log -msg "StatusCode: $($_.Exception.Response.StatusCode.value__)" -logLevel "error" -currentDate $currentDate -instance $instance
+                    Log -msg "Url: api/login" -logLevel "error" -currentDate $currentDate -instance $instance
+                    Log -msg "StatusDescription: $($_.Exception.Response.StatusDescription)" -logLevel "error" -currentDate $currentDate -instance $instance
+                }
+
+                if ($accessTokenResponseModel) {
+
+                    $accessToken = $accessTokenResponseModel.access_token
+
+                    $header = @{
+                        "authorization" = "Bearer $accessToken"
                     }
-                        
-                    try {
-                        if (!$entry.fileName.Contains(".json")) {
-                            Invoke-RestMethod @entryExportParameters -OutFile $filePath | Out-Null
+
+                    $currentCategory = "";
+                    $i = 0;
+                    for (; $i -lt $manifestJson.Entries.Length; $i = $i + 1) {
+                        $entry = $manifestJson.Entries[$i]
+                        if ($currentCategory -ne $entry.Category) {
+                            $currentCategory = $entry.Category;
+                            $message = "Starting extraction of $($entry.Category) category."
+                            Log -msg $message -displayMsg $message -logLevel "displayInfo" -currentDate $currentDate -instance $instance
+                        }
+                        $message = "Extracting data from $($entry.Url)"
+                        Log -msg $message -displayMsg $message -logLevel "info" -currentDate $currentDate -instance $instance
+                        $directoryPath = $exportFilePath + "/" + $instance + "/" + $entry.Path
+					
+                        try {
+                            CreateDirectoryIfDoesNotExist -directoryPath $directoryPath -currentDate $currentDate -instance $instance
+                        }
+                        catch {
+                            $msg = "Error trying to create $directoryPath directory"
+                            $displayMsg = "An error occurred when trying to create a new directory"
+                            Log -msg $msg -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate -instance $instance
+                        }
+                        $fileName = $entry.FileName.Split([IO.Path]::GetInvalidFileNameChars()) -join ''
+                        $filePath = "$directoryPath/$fileName"
+                        $fileAlreadyExists = Test-Path -Path $filePath -PathType Leaf
+                        if (!$fileAlreadyExists -or $overwrite) {
+                            $entryExportParameters = @{
+                                Method      = "GET"
+                                Uri         = "https://$($manifestJson.SubDomain).$($manifestJson.HostName)$($entry.Url)"
+                                Headers     = $header
+                                ContentType = "application/json"  
+                            }
+								
+                            try {
+                                if (!$entry.fileName.Contains(".json")) {
+                                    Invoke-RestMethod @entryExportParameters -OutFile $filePath | Out-Null
+                                }
+                                else {
+                                    $GetEntriesResponse = Invoke-RestMethod @entryExportParameters
+                                    $GetEntriesResponse | ConvertTo-Json -Depth 100 | Out-File -FilePath $filePath
+                                }
+                            }
+                            catch {
+                                $message = "Error occurred when extracting data from $($entry.Url)"
+                                Log -msg "An error occurred" -displayMsg $message -logLevel "error" -currentDate $currentDate -instance $instance
+                                Log -msg $message -logLevel "error" -currentDate $currentDate -instance $instance
+                                Log -msg "StatusCode: $($_.Exception.Response.StatusCode.value__)" -logLevel "error" -currentDate $currentDate -instance $instance
+                                Log -msg "Url: $($entry.Url)" -logLevel "error" -currentDate $currentDate -instance $instance
+                                Log -msg "StatusDescription: $($_.Exception.Response.StatusDescription)" -logLevel "error" -currentDate $currentDate -instance $instance
+                                Log -msg "Exception: $($_.Exception)" -logLevel "error" -currentDate $currentDate -instance $instance
+                                Write-Verbose $_.Exception
+                                Write-Verbose $_.Exception.Response
+                                if ($_.Exception.Response.StatusCode -eq 503) {
+                                    $message = "Lost connection to server. Waiting to restablish connection."
+                                    Write-ColorOutput red $message
+                                    Log -msg $message -displayMsg $message -logLevel "info" -currentDate $currentDate
+                                    do {
+                                        $response = ServerHealtCheck("https://$($manifestJson.SubDomain).$($manifestJson.HostName)/en/healthcheck");
+                                    } while ($response.Exception)
+                                    $message = "Server connection reestablished. Resuming export"
+                                    Write-ColorOutput green $message
+                                    Log -msg $message -displayMsg $message -logLevel "info" -currentDate $currentDate
+                                    $i = $i - 1;
+                                }
+                            }
                         }
                         else {
-                            $GetEntriesResponse = Invoke-RestMethod @entryExportParameters
-                            $GetEntriesResponse | ConvertTo-Json -Depth 100 | Out-File -FilePath $filePath
+                            $message = "Skipping $filePath because file already exists"
+                            Log -msg $message -displayMsg $message -logLevel "info" -currentDate $currentDate -instance $instance
                         }
                     }
+                    $msg = "Exporting data for instance $instance was succesful."
+                    Log -msg $msg -displayMsg $msg -logLevel "success" -currentDate $currentDate -instance $instance
+
+                    try {
+                        Logout($header)
+                    }
                     catch {
-                        $message = "Error occurred when extracting data from $($entry.Url)"
-                        Log -msg "An error occurred" -displayMsg $message -logLevel "error" -currentDate $currentDate
-                        Log -msg $message -logLevel "error" -currentDate $currentDate
-                        Log -msg "StatusCode: $($_.Exception.Response.StatusCode.value__)" -logLevel "error" -currentDate $currentDate
-                        Log -msg "Url: $($entry.Url)" -logLevel "error" -currentDate $currentDate
-                        Log -msg "StatusDescription: $($_.Exception.Response.StatusDescription)" -logLevel "error" -currentDate $currentDate
-                        Log -msg "Exception: $($_.Exception)" -logLevel "error" -currentDate $currentDate
-                        Write-Verbose $_.Exception
-                        Write-Verbose $_.Exception.Response
-                        if ($_.Exception.Response.StatusCode -eq 503) {
-                            $message = "Lost connection to server. Waiting to restablish connection."
-                            Write-ColorOutput red $message
-                            Log -msg $message -displayMsg $message -logLevel "info" -currentDate $currentDate
-                            do {
-                                $response = ServerHealtCheck("https://$($manifestJson.SubDomain).$($manifestJson.HostName)/en/healthcheck");
-								
-                            } while ($response.Exception)
-                            $message = "Server connection reestablished. Resuming export"
-                            Write-ColorOutput green $message
-                            Log -msg $message -displayMsg $message -logLevel "info" -currentDate $currentDate
-                            $i = $i - 1;
-                        }
+                        $message = "Error occurred when logging out"
+                        Log -msg $message -displayMsg $message -logLevel "error" -currentDate $currentDate -instance $instance
                     }
                 }
                 else {
-                    $message = "Skipping $filePath because file already exists"
-                    Log -msg $message -displayMsg $message -logLevel "info" -currentDate $currentDate
+                    $msg = "Exporting data for instance $instance finished with errors."
+                    $displayMsg = "Exporting data for instance $instance was not successful. Check the log file for more details."
+                    Log -msg $msg -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate -instance $instance
                 }
+				
             }
-            $msg = "Exporting Instance run finished."
-            Log -msg $msg -displayMsg $msg -logLevel "success" -currentDate $currentDate
-
-            try {
-                Logout($header)
+            else {
+                $displayMsg = "An error occurred when looking for manifest folder"
+                Log -msg "Error in finding manifest folder" -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate
             }
-            catch {
-                $message = "Error occurred when logging out"
-                Log -msg $message -displayMsg $message -logLevel "error" -currentDate $currentDate
-            }
+			
         }
-        else {
-            $msg = "Exporting Instance run finished with errors."
-            $displayMsg = "Exporting Instance run was not successful. Check the log file for more details."
-            Log -msg $msg -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate
-        }
+        $msg = "Exporting Instance script run finished."
+        Log -msg $msg -displayMsg $msg -logLevel "success" -currentDate $currentDate -instance $instance
+    }
         
-    }
-    else {
-        try {
-            CreateDirectoryIfDoesNotExist -directoryPath $exportFilePath -currentDate $currentDate
-        }
-        catch {
-            $displayMsg = "An error occurred when trying to create a new directory"
-            Log -msg "Error trying to create $directoryPath directory" -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate
-        }
-
-        $displayMsg = "An error occurred when looking for manifest file"
-        Log -msg "Error in finding manifest file" -displayMsg $displayMsg -logLevel "error" -currentDate $currentDate
-    }
 }
 Export
