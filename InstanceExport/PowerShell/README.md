@@ -20,11 +20,11 @@ Please note that there will be subtle differences between `Windows PowerShell` a
 
 `Windows PowerShell` usually comes installed with Windows. It uses the `PowerShell 5` version as you can see from the image below:
 
-![image](https://user-images.githubusercontent.com/67288628/225462134-9a8e0224-3638-46be-9758-5adaf401d655.png)
+![image](https://github.com/user-attachments/assets/3f61a5d3-8b95-43cb-b85d-d030b598aa1f)
 
 `PowerShell 7` is the most recent version of PowerShell released by Microsoft. We recommend using it as it supports longer file paths, which allows our `InstanceExport` script to export files with long names properly. After you install `PowerShell 7` and open its command line prompt, you should be able to see the version of PowerShell using the `$PSVersionTable.PSVersion` command as shown in the image below:
 
-![image](https://user-images.githubusercontent.com/67288628/225463265-13a63f36-ef92-4813-9108-e4e949dc8e3f.png)
+![image](https://github.com/user-attachments/assets/9e7449fb-fe9d-414c-8b93-eaaf7f4ded0b)
 
 6. Navigate to the directory where you have saved the `InstanceExport.ps1` and that has also the `manifest` folder.
 
@@ -36,7 +36,7 @@ Please note that there will be subtle differences between `Windows PowerShell` a
 
 The process will prompt you to enter the required fields: `$manifestFilePath`, `$exportFilePath`, `$userName` and `$password`. Because you navigated to the directory/folder in step 5, you do not need to enter the full path, just the file names (see example below).
 
-![image](https://user-images.githubusercontent.com/67288628/225464180-819117b1-0f24-4ecb-a6c7-ae2d45db34d6.png)
+![image](https://github.com/user-attachments/assets/eca84717-d4b1-40a6-a8ef-415f11bdc546)
 
 It will run automatically after you enter all required fields. The progress of your data export will be logged by each available category. When all is finished you should see the message "Exporting Instance finished".
 
@@ -50,12 +50,25 @@ The PowerShell script has five parameters that are explained below:
 
 Please note that if you use `.\InstanceExport.ps1` without passing any parameters you will be asked to provide the information and will not be able to use the overwrite parameter. If you are more experienced with PowerShell, you can also use the command by passing parameters as shown in the image below:
 
-![image](https://user-images.githubusercontent.com/67288628/225468832-d4fc83d7-4980-45b4-8a69-094f17e67b0d.png)
+![image](https://github.com/user-attachments/assets/de040cf5-f268-4316-8ef5-2276b1e72648)
 
 ### Output
 We expect that things will go smoothly while you are using the DevResults InstanceExport script and that you get a result similar to the following image:
 
-![image](https://user-images.githubusercontent.com/67288628/225465649-ac48360f-af6c-458b-a294-c0e0409d33e3.png)
+![image](https://github.com/user-attachments/assets/0af5a12c-4c5e-4fc2-b737-1901d2d5739f)
+
+In the folder you've saved the `InstanceExport` script you will noticed that a new folder `export` (or other name you've provided in the $exportFilePath parameter) and inside that folder you will have a folder with the name of the exported instance. You should expect that your data exported will be there in subfolders and a log file will be generated with the pattern `yourInstance_InstanceExport_MM_dd_yyyy_HH_mm_ss_log.txt`
+
+![image](https://github.com/user-attachments/assets/2078418b-77ea-4131-9f4a-3f075cc3b300)
+
+In case you are exporting more than one instance you will have a similar output but with more log information like the following image:
+
+![image](https://github.com/user-attachments/assets/9f425cd6-34b2-449a-af71-bdc2de9bae6d)
+
+And similarly you will have as many folders as manifests files you have inside your `manifest` folder. You will notice that the script would be generating one folder for each instance you've own.
+
+![image](https://github.com/user-attachments/assets/be64f831-f668-45e0-aceb-7bb1d153e0b4)
+
 
 ### Troubleshooting
 
