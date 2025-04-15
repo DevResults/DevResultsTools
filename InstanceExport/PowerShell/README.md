@@ -10,11 +10,9 @@ In order to use it, you should:
 
 3. Save the `InstanceExport.ps1` file in a directory in your machine like `C:\Users\MyUser\InstanceExport`.
 
-4. Inside the folder created on step 3. create a `manifest` folder. 
+4. Save the `manifest` file we have provided you inside the same directory of step 3. The manifest file should be always in the `JSON` format in order to script be able to read it.
 
-5. Save your manifest file(s) inside the `manifest` folder. The manifest files come in the JSON format and they are necessary to be that way to be read by the script. In this tutorial consider that your file(s) will be named in the pattern yourInstanceName_manifest.json_.
-
-4. Open a new command line interface (CLI) prompt that supports PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administrator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator"). If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.5).
+5. Open a new command line interface (CLI) prompt that supports PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administrator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator"). If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.5).
 
 Please note that there will be subtle differences between `Windows PowerShell` and `PowerShell 7` command prompts:
 
@@ -30,11 +28,38 @@ Please note that there will be subtle differences between `Windows PowerShell` a
 
    e.g.: `cd C:\Users\MyUser\InstanceExport`
 
-6. In the cli prompt, type the following command. **Be very careful not to click inside the cli prompt while it's running, or it may go into "select mode" and pause.**
+7. In the cli prompt, type the following command. **Be very careful not to click inside the cli prompt while it's running, or it may go into "select mode" and pause.**
 
    `.\InstanceExport`
 
 The process will prompt you to enter the required fields: `$manifestFilePath`, `$exportFilePath`, `$userName` and `$password`. Because you navigated to the directory/folder in step 5, you do not need to enter the full path, just the file names (see example below).
+
+![image](https://github.com/user-attachments/assets/ae36ca77-66f9-4377-84dd-e9fd78417309)
+
+### Alternative scenario
+We also allow to export multiple instances at once using the same `InstanceExport` script. In order to do that possible you should follow almost the same set of instructions:
+
+1. Download the [InstanceExport.ps1](https://github.com/DevResults/DevResultsTools/releases/download/1.0.3/InstanceExport.ps1) PowerShell script.
+
+2. Reach out to us at help@devresults.com to request an Instance Export Manifest. Or Manifests in case you need to export more than one instance you own.
+
+3. Save the `InstanceExport.ps1` file in a directory in your machine like `C:\Users\MyUser\InstanceExport`.
+
+4. Create a `manifest` folder inside the directory of step 3.
+
+5. Save all `manifest` files we have provided you inside the directory of step 4. All manifest files should be always in the `JSON` format in order to script be able to read it.
+
+6. Open a new command line interface (CLI) prompt that supports PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administrator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator").
+
+7. Navigate to the directory where you have saved the `InstanceExport.ps1` and that has also the `manifest` folder.
+
+   e.g.: `cd C:\Users\MyUser\InstanceExport`
+
+8. In the cli prompt, type the following command. **Be very careful not to click inside the cli prompt while it's running, or it may go into "select mode" and pause.**
+
+   `.\InstanceExport`
+
+The process will prompt you to enter the required fields: `$manifestFilePath`, `$exportFilePath`, `$userName` and `$password`. Because you navigated to the directory/folder in step 7, you do not need to enter the full path, just the folder names (see example below).
 
 ![image](https://github.com/user-attachments/assets/eca84717-d4b1-40a6-a8ef-415f11bdc546)
 
@@ -55,20 +80,21 @@ Please note that if you use `.\InstanceExport.ps1` without passing any parameter
 ### Output
 We expect that things will go smoothly while you are using the DevResults InstanceExport script and that you get a result similar to the following image:
 
-![image](https://github.com/user-attachments/assets/0af5a12c-4c5e-4fc2-b737-1901d2d5739f)
+For single instance Export:
 
-In the folder you've saved the `InstanceExport` script you will noticed that a new folder `export` (or other name you've provided in the $exportFilePath parameter) and inside that folder you will have a folder with the name of the exported instance. You should expect that your data exported will be there in subfolders and a log file will be generated with the pattern `yourInstance_InstanceExport_MM_dd_yyyy_HH_mm_ss_log.txt`
+![image](https://github.com/user-attachments/assets/3376daf2-9950-48df-ad54-7f3d1c7ea677)
 
-![image](https://github.com/user-attachments/assets/2078418b-77ea-4131-9f4a-3f075cc3b300)
-
-In case you are exporting more than one instance you will have a similar output but with more log information like the following image:
+For multiple instances Export
 
 ![image](https://github.com/user-attachments/assets/9f425cd6-34b2-449a-af71-bdc2de9bae6d)
 
-And similarly you will have as many folders as manifests files you have inside your `manifest` folder. You will notice that the script would be generating one folder for each instance you've own.
+In the folder you've saved the `InstanceExport` script you will noticed that a new folder `export` (or other name you've provided in the $exportFilePath parameter) and inside that folder you will have a folder with the name of the exported instance. You should expect that your data exported will be there in subfolders and a log file will be generated with the pattern `InstanceExport_MM_dd_yyyy_HH_mm_ss_log.txt`
 
-![image](https://github.com/user-attachments/assets/be64f831-f668-45e0-aceb-7bb1d153e0b4)
+![image](https://github.com/user-attachments/assets/72e839f5-19ce-4cf0-8359-65254245754d)
 
+And similarly if you followed the process to export more than one instance you will notice in the same folder a folder for each `instance` exported.
+
+![image](https://github.com/user-attachments/assets/e4546e4b-5240-4023-a1fc-b00ad1f33488)
 
 ### Troubleshooting
 
