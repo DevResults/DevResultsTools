@@ -181,6 +181,10 @@ Function ServerHealtCheck($Uri) {
 }
 
 Function ExportInstanceData() {
+		
+    $message = "Starting exporting data for instance $instance"
+    Log -msg $message -displayMsg $message -logLevel "success" -currentDate $currentDate 
+    
     try {
         CreateDirectoryIfDoesNotExist -directoryPath $directoryPath -currentDate $currentDate
     }
@@ -208,9 +212,6 @@ Function ExportInstanceData() {
         $header = @{
             "authorization" = "Bearer $accessToken"
         }
-		
-        $message = "Starting exporting data for instance $instance"
-        Log -msg $message -displayMsg $message -logLevel "success" -currentDate $currentDate 
 		
         $currentCategory = "";
         $i = 0;
