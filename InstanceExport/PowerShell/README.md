@@ -4,54 +4,97 @@ At DevResults we value the concept that your data belongs to _you_, and you have
 
 In order to use it, you should:
 
-1. Download the [InstanceExport.ps1](https://github.com/DevResults/DevResultsTools/releases/download/1.0.2/InstanceExport.ps1) PowerShell script.
+1. Download the [InstanceExport.ps1](https://github.com/DevResults/DevResultsTools/releases/download/1.0.3/InstanceExport.ps1) PowerShell script.
 
-2. Reach out to us at help@devresults.com to request an Instance Export Manifest.
+2. Reach out to us at help@devresults.com to request an Instance Export Manifest. Or Manifests in case you need to export more than one instance you own.
 
-3. Save the manifest file in the same directory/folder you have saved the powershell script. It's important to save the file in JSON format and to remember the name of the file. In this tutorial the name we use is _manifest.json_.
+3. Save the `InstanceExport.ps1` file in a directory in your machine like `C:\Users\MyUser\InstanceExport`.
 
-4. Open a new command line interface (CLI) prompt that supports PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administrator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator"). If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.3).
+4. Save the `manifest` file we have provided you inside the same directory of step 3. The manifest file should be always in the `JSON` format in order to script be able to read it.
+
+5. Open a new command line interface (CLI) prompt that supports PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administrator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator"). If you don't have PowerShell installed you can follow instructions at [Installing Power Shell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.5).
 
 Please note that there will be subtle differences between `Windows PowerShell` and `PowerShell 7` command prompts:
 
 `Windows PowerShell` usually comes installed with Windows. It uses the `PowerShell 5` version as you can see from the image below:
 
-![image](https://user-images.githubusercontent.com/67288628/225462134-9a8e0224-3638-46be-9758-5adaf401d655.png)
+![image](https://github.com/user-attachments/assets/3f61a5d3-8b95-43cb-b85d-d030b598aa1f)
 
 `PowerShell 7` is the most recent version of PowerShell released by Microsoft. We recommend using it as it supports longer file paths, which allows our `InstanceExport` script to export files with long names properly. After you install `PowerShell 7` and open its command line prompt, you should be able to see the version of PowerShell using the `$PSVersionTable.PSVersion` command as shown in the image below:
 
-![image](https://user-images.githubusercontent.com/67288628/225463265-13a63f36-ef92-4813-9108-e4e949dc8e3f.png)
+![image](https://github.com/user-attachments/assets/9e7449fb-fe9d-414c-8b93-eaaf7f4ded0b)
 
-5. Navigate to the directory where you have saved the InstanceExport.ps1 and the JSON manifest file.
+6. Navigate to the directory where you have saved the `InstanceExport.ps1` and that has also the `manifest` folder.
 
    e.g.: `cd C:\Users\MyUser\InstanceExport`
 
-6. In the cli prompt, type the following command. **Be very careful not to click inside the cli prompt while it's running, or it may go into "select mode" and pause.**
+7. In the cli prompt, type the following command. **Be very careful not to click inside the cli prompt while it's running, or it may go into "select mode" and pause.**
 
    `.\InstanceExport`
 
 The process will prompt you to enter the required fields: `$manifestFilePath`, `$exportFilePath`, `$userName` and `$password`. Because you navigated to the directory/folder in step 5, you do not need to enter the full path, just the file names (see example below).
 
-![image](https://user-images.githubusercontent.com/67288628/225464180-819117b1-0f24-4ecb-a6c7-ae2d45db34d6.png)
+![image](https://github.com/user-attachments/assets/ae36ca77-66f9-4377-84dd-e9fd78417309)
+
+### Alternative scenario
+We also allow to export multiple instances at once using the same `InstanceExport` script. In order to do that possible you should follow almost the same set of instructions:
+
+1. Download the [InstanceExport.ps1](https://github.com/DevResults/DevResultsTools/releases/download/1.0.3/InstanceExport.ps1) PowerShell script.
+
+2. Reach out to us at help@devresults.com to request an Instance Export Manifest. Or Manifests in case you need to export more than one instance you own.
+
+3. Save the `InstanceExport.ps1` file in a directory in your machine like `C:\Users\MyUser\InstanceExport`.
+
+4. Create a `manifest` folder inside the directory of step 3.
+
+5. Save all `manifest` files we have provided you inside the directory of step 4. All manifest files should be always in the `JSON` format in order to script be able to read it.
+
+6. Open a new command line interface (CLI) prompt that supports PowerShell commands (depending on your organizational IT policies, you may need to open an elevated/administrator prompt, e.g. by right clicking on the Powershell icon and choosing "Run as administrator").
+
+7. Navigate to the directory where you have saved the `InstanceExport.ps1` and that has also the `manifest` folder.
+
+   e.g.: `cd C:\Users\MyUser\InstanceExport`
+
+8. In the cli prompt, type the following command. **Be very careful not to click inside the cli prompt while it's running, or it may go into "select mode" and pause.**
+
+   `.\InstanceExport`
+
+The process will prompt you to enter the required fields: `$manifestFilePath`, `$exportFilePath`, `$userName` and `$password`. Because you navigated to the directory/folder in step 7, you do not need to enter the full path, just the folder names (see example below).
+
+![image](https://github.com/user-attachments/assets/eca84717-d4b1-40a6-a8ef-415f11bdc546)
 
 It will run automatically after you enter all required fields. The progress of your data export will be logged by each available category. When all is finished you should see the message "Exporting Instance finished".
 
 The PowerShell script has five parameters that are explained below:
 
-- manifestFilePath: Path (or just file name, if same directory) of the manifest file you have downloaded using step 2, e.g. `C:\Users\MyUser\InstanceExport\manifest.json`.
-- exportFilePath: Path (or just file name, if same directory) to create a folder for the exported files, e.g. `C:\Users\MyUser\InstanceExport\2021_Export\`; you do not need to create this folder manually, the script will do so for you.
+- manifestFilePath: Path (or just folder name, if in the same directory) of the manifest file(s) you have added inside the `manifest` folder from step 3, e.g. `C:\Users\MyUser\InstanceExport\manifest`.
+- exportFilePath: Path (or just folder name, if in the same directory) to create a folder that will contain all instance(s) you are going to export, e.g. `C:\Users\MyUser\InstanceExport\2025_Export\`; you do not need to create this folder manually, the script will do so for you.
 - userName: Your username (work email) for login at DevResults, e.g. `first.last@org.org`.
 - password: Your password for login at DevResults or API Key's Secret. (If you're using a password manager and copy/pasting your password, be aware that CTRL-V does not work in Powershell; try right clicking in the window to paste instead.)
 - overwrite: Optional parameter to confirm whether or not you want to overwrite files that already exist and replace them. This field defaults to `false`, which means that if a file already exists in the exportFilePath, it will be skipped.
 
 Please note that if you use `.\InstanceExport.ps1` without passing any parameters you will be asked to provide the information and will not be able to use the overwrite parameter. If you are more experienced with PowerShell, you can also use the command by passing parameters as shown in the image below:
 
-![image](https://user-images.githubusercontent.com/67288628/225468832-d4fc83d7-4980-45b4-8a69-094f17e67b0d.png)
+![image](https://github.com/user-attachments/assets/de040cf5-f268-4316-8ef5-2276b1e72648)
 
 ### Output
 We expect that things will go smoothly while you are using the DevResults InstanceExport script and that you get a result similar to the following image:
 
-![image](https://user-images.githubusercontent.com/67288628/225465649-ac48360f-af6c-458b-a294-c0e0409d33e3.png)
+For single instance Export:
+
+![image](https://github.com/user-attachments/assets/3376daf2-9950-48df-ad54-7f3d1c7ea677)
+
+For multiple instances Export
+
+![image](https://github.com/user-attachments/assets/9f425cd6-34b2-449a-af71-bdc2de9bae6d)
+
+In the folder you've saved the `InstanceExport` script you will noticed that a new folder `export` (or other name you've provided in the $exportFilePath parameter) and inside that folder you will have a folder with the name of the exported instance. You should expect that your data exported will be there in subfolders and a log file will be generated with the pattern `InstanceExport_MM_dd_yyyy_HH_mm_ss_log.txt`
+
+![image](https://github.com/user-attachments/assets/72e839f5-19ce-4cf0-8359-65254245754d)
+
+And similarly if you followed the process to export more than one instance you will notice in the same folder a folder for each `instance` exported.
+
+![image](https://github.com/user-attachments/assets/e4546e4b-5240-4023-a1fc-b00ad1f33488)
 
 ### Troubleshooting
 
